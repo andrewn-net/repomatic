@@ -7,7 +7,7 @@
       "name": "AI Coding — Summit Supply E-commerce Demo",
       "tool": "ai-demo",
       "description": "A small Next.js outdoor-gear storefront (Summit Supply). Designed for demoing AI coding tools like Claude Code, Codex, or Lovable in Slack.",
-      "template_repo": "andrewn-net/repomatic-demo-001",
+      "template_repo": "andrewn-net/repomatic-template-demo-1",
       "default_repo_name": "ai-demo",
       "start_tag": "demo-start",
       "slack_apps": [

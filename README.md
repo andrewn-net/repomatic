@@ -119,7 +119,7 @@ That keeps the same repo URL (so your Slack app's repo connection stays valid) a
 
 A minimal Next.js outdoor-gear storefront (Summit Supply). Designed for demoing AI coding tools like Claude Code, Codex, or Lovable in Slack. Ask the AI to fix a bug or add a feature; it opens a PR implementing the changes. Merge it, run `repomatic reset ai-demo`, and you're back to square one.
 
-Template: [`andrewn-net/repomatic-demo-001`](https://github.com/andrewn-net/repomatic-demo-001)
+Template: [`andrewn-net/repomatic-template-demo-1`](https://github.com/andrewn-net/repomatic-template-demo-1)
 
 ## How it's structured
 
