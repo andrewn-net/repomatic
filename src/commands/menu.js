@@ -15,7 +15,7 @@ const MENU_ITEMS = [
   { title: `${kleur.bgYellow().black(' 2 ')} ${kleur.yellow('Reset an existing demo repo')} ${kleur.dim('(reset)')}`, value: 'reset' },
   { title: `${kleur.bgGreen().black(' 3 ')} ${kleur.green('Check repo status')} ${kleur.dim('(status)')}`, value: 'status' },
   { title: `${kleur.bgBlue().white(' 4 ')} ${kleur.blue('Show Slack setup steps')} ${kleur.dim('(setup)')}`, value: 'setup' },
-  { title: `${kleur.bgMagenta().white(' 5 ')} ${kleur.magenta('Browse available demo scemarios')} ${kleur.dim('(list)')}`, value: 'list' },
+  { title: `${kleur.bgMagenta().white(' 5 ')} ${kleur.magenta('Browse available demo scenarios')} ${kleur.dim('(list)')}`, value: 'list' },
   { title: kleur.dim('──────────────────────────────────────'), value: '__separator__', disabled: true },
   { title: `${kleur.bgWhite().black(' 6 ')} ${kleur.white('Check your machine setup')} ${kleur.dim('(init)')}`, value: 'init' },
   { title: `${kleur.bgRed().white(' 0 ')} ${kleur.red('Exit repomatic')} ${kleur.dim('(quit)')}`, value: 'quit' },
