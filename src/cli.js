@@ -20,7 +20,7 @@ ${sectionHeader('Commands')}
   ${kleur.cyan('init')}
     Check prerequisites (gh, git) and confirm auth
   ${kleur.cyan('list')}
-    Show available demo scenarios
+    available demo scemarios
   ${kleur.cyan('provision')} <scenario>
     Create a fresh demo repo from a scenario template
   ${kleur.cyan('reset')} <scenario>

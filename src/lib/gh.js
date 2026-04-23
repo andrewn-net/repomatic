@@ -92,29 +92,50 @@ export async function createFromTemplate({ template, owner, name, isPrivate }) {
 
 /** Create a git tag on the default branch of a repo using the API. */
 export async function createTag(owner, name, tagName) {
-  // 1. Get the default branch
-  const branch = await gh([
-    'api',
-    `repos/${owner}/${name}`,
-    '--jq',
-    '.default_branch'
-  ]);
+  const maxRetries = 10;
+  const retryInterval = 2000; // 2 seconds
 
-  // 2. Get the latest commit SHA
-  const commitSha = await gh([
-    'api',
-    `repos/${owner}/${name}/commits/${branch}`,
-    '--jq',
-    '.sha'
-  ]);
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      // 1. Get the default branch
+      const branch = await gh([
+        'api',
+        `repos/${owner}/${name}`,
+        '--jq',
+        '.default_branch'
+      ]);
 
-  // 3. Create the ref (tag)
-  return gh([
-    'api',
-    `repos/${owner}/${name}/git/refs`,
-    '-f', `ref=refs/tags/${tagName}`,
-    '-f', `sha=${commitSha}`
-  ]);
+      if (!branch) {
+        throw new Error('Default branch not found');
+      }
+
+      // 2. Get the latest commit SHA
+      const commitSha = await gh([
+        'api',
+        `repos/${owner}/${name}/commits/${branch}`,
+        '--jq',
+        '.sha'
+      ]);
+
+      // 3. Create the ref (tag)
+      return await gh([
+        'api',
+        `repos/${owner}/${name}/git/refs`,
+        '-f', `ref=refs/tags/${tagName}`,
+        '-f', `sha=${commitSha}`
+      ]);
+    } catch (err) {
+      // If it's a "Git Repository is empty" error (409), wait and retry
+      if (err.message.includes('409') || err.message.includes('empty')) {
+        if (i === maxRetries - 1) {
+          throw new Error(`Repository still empty after ${maxRetries} retries. Please try running \`repomatic reset\` in a moment.`);
+        }
+        await new Promise(resolve => setTimeout(resolve, retryInterval));
+        continue;
+      }
+      throw err;
+    }
+  }
 }
 
 /** Delete a repo (used internally — always behind a confirmation prompt). */

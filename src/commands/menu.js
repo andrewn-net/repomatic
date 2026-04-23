@@ -15,7 +15,7 @@ const MENU_ITEMS = [
   { title: `${kleur.bgYellow().black(' 2 ')} ${kleur.yellow('Reset an existing demo repo')} ${kleur.dim('(reset)')}`, value: 'reset' },
   { title: `${kleur.bgGreen().black(' 3 ')} ${kleur.green('Check repo status')} ${kleur.dim('(status)')}`, value: 'status' },
   { title: `${kleur.bgBlue().white(' 4 ')} ${kleur.blue('Show Slack setup steps')} ${kleur.dim('(setup)')}`, value: 'setup' },
-  { title: `${kleur.bgMagenta().white(' 5 ')} ${kleur.magenta('Browse available scenarios')} ${kleur.dim('(list)')}`, value: 'list' },
+  { title: `${kleur.bgMagenta().white(' 5 ')} ${kleur.magenta('Browse available demo scemarios')} ${kleur.dim('(list)')}`, value: 'list' },
   { title: kleur.dim('──────────────────────────────────────'), value: '__separator__', disabled: true },
   { title: `${kleur.bgWhite().black(' 6 ')} ${kleur.white('Check your machine setup')} ${kleur.dim('(init)')}`, value: 'init' },
   { title: `${kleur.bgRed().white(' 0 ')} ${kleur.red('Exit repomatic')} ${kleur.dim('(quit)')}`, value: 'quit' },
@@ -26,7 +26,7 @@ const ACTION_LABELS = {
   reset: 'Reset an existing demo repo',
   status: 'Check repo status',
   setup: 'Show Slack setup steps',
-  list: 'Browse available scenarios',
+  list: 'available demo scemarios',
   init: 'Check your machine setup',
 };
 
@@ -35,10 +35,6 @@ function controlsHint() {
 }
 
 async function pickScenario(manifest, promptText) {
-  if (manifest.scenarios.length === 1) {
-    console.log(`  ${statusBadge('info', `Only one scenario found, auto-selecting ${kleur.cyan(manifest.scenarios[0].id)}.`)}`);
-    return manifest.scenarios[0].id;
-  }
 
   console.log(`  ${kleur.bold('Choose a scenario')}`);
   console.log(`  ${controlsHint()}\n`);

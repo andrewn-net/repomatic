@@ -6,7 +6,7 @@ export async function list(args) {
   const { manifestArg } = extractManifestFlag(args);
   const manifest = await loadManifest(manifestArg);
 
-  console.log(sectionHeader('Available Demo Scenarios', `${manifest.scenarios.length} scenario(s) loaded`));
+  console.log(sectionHeader('available demo scemarios', `${manifest.scenarios.length} scenario(s) loaded`));
 
   for (const scenario of manifest.scenarios) {
     console.log(
