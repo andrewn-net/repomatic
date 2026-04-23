@@ -1,36 +1,42 @@
 {
-  "$schema": "https://repomatic.dev/manifest.schema.json",
+  "$schema": "./manifest.schema.json",
   "version": 1,
   "scenarios": [
     {
-      "id": "claude-code",
-      "name": "Claude Code — Summit Supply E-commerce Demo",
-      "tool": "claude-code",
-      "description": "A small Next.js outdoor-gear storefront (Summit Supply) with a catalog, cart, and checkout. Supports two demo flows: fixing a bug and adding a feature. Great for showing Claude Code in Slack handling real-feeling customer-facing work.",
-      "template_repo": "andrewn-net/repomatic-claude-code-demo",
-      "default_repo_name": "claude-code-demo",
+      "id": "ai-demo",
+      "name": "AI Coding — Summit Supply E-commerce Demo",
+      "tool": "ai-demo",
+      "description": "A small Next.js outdoor-gear storefront (Summit Supply). Designed for demoing AI coding tools like Claude Code, Codex, or Lovable in Slack.",
+      "template_repo": "andrewn-net/repomatic-demo-001",
+      "default_repo_name": "ai-demo",
       "start_tag": "demo-start",
-      "slack_app": {
-        "name": "Claude Code for Slack",
-        "install_url": "https://claude.ai/install-slack-app",
-        "docs_url": "https://docs.claude.com/en/docs/claude-code/slack"
-      },
+      "slack_apps": [
+        {
+          "name": "Claude Code for Slack",
+          "install_url": "https://slack.com/marketplace/A08SF47R6P4",
+          "docs_url": "https://docs.claude.com/en/docs/claude-code/slack"
+        },
+        {
+          "name": "Codex for Slack",
+          "install_url": "https://slack.com/marketplace/A09F5C369E3-openai-codex",
+          "docs_url": "https://developers.openai.com/codex/integrations/slack"
+        }
+      ],
       "prompts": {
         "bug_fix": [
-          "@Claude Code we're getting reports that customers can't complete checkout on the Summit Supply site — they fill in the form, hit 'Place order', and get an error. Can you take a look and open a PR with a fix?"
+          "@[AI Tool] we're getting reports that customers can't complete checkout on the Summit Supply site — they fill in the form, hit 'Place order', and get an error. Can you take a look and open a PR with a fix?"
         ],
         "feature": [
-          "@Claude Code can you add a wishlist feature to the Summit Supply site? Customers should be able to favorite products from the catalog with a heart icon, see a count in the header, and view their wishlist on a dedicated page."
+          "@[AI Tool] can you add a wishlist feature to the Summit Supply site? Customers should be able to favorite products from the catalog with a heart icon, see a count in the header, and view their wishlist on a dedicated page."
         ]
       },
       "runbook": [
-        "Provision your demo repo: repomatic provision claude-code",
-        "Tag the demo repo (one-time): see repomatic README step 5",
-        "Install the Claude Code Slack app in your workspace (URL above) and connect it to your demo repo.",
+        "Provision your demo repo: repomatic provision ai-demo",
+        "Install your AI's Slack app (e.g. Claude Code or Codex) and connect it to your demo repo.",
         "Run the storefront locally so your audience can see it: cd into the repo, npm install && npm run dev",
-        "Pick a scenario (bug fix or feature) and paste the relevant prompt from the list above into Slack.",
-        "Review the PR Claude Code opens. Merge it. Refresh the storefront to see the change live.",
-        "When you're ready to demo again: repomatic reset claude-code"
+        "Pick a scenario (bug fix or feature) and paste the relevant prompt from the list above into Slack, mentioning your AI tool.",
+        "Review the PR the AI opens. Merge it. Refresh the storefront to see the change live.",
+        "When you're ready to demo again: repomatic reset ai-demo"
       ]
     }
   ]

@@ -42,8 +42,8 @@ ${sectionHeader('Options')}
 
 ${sectionHeader('Examples')}
   repomatic
-  repomatic provision claude-code
-  repomatic reset claude-code --yes
+  repomatic provision ai-demo
+  repomatic reset ai-demo --yes
 `;
 }
 

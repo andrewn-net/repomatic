@@ -90,6 +90,33 @@ export async function createFromTemplate({ template, owner, name, isPrivate }) {
   return gh(args);
 }
 
+/** Create a git tag on the default branch of a repo using the API. */
+export async function createTag(owner, name, tagName) {
+  // 1. Get the default branch
+  const branch = await gh([
+    'api',
+    `repos/${owner}/${name}`,
+    '--jq',
+    '.default_branch'
+  ]);
+
+  // 2. Get the latest commit SHA
+  const commitSha = await gh([
+    'api',
+    `repos/${owner}/${name}/commits/${branch}`,
+    '--jq',
+    '.sha'
+  ]);
+
+  // 3. Create the ref (tag)
+  return gh([
+    'api',
+    `repos/${owner}/${name}/git/refs`,
+    '-f', `ref=refs/tags/${tagName}`,
+    '-f', `sha=${commitSha}`
+  ]);
+}
+
 /** Delete a repo (used internally — always behind a confirmation prompt). */
 export async function deleteRepo(owner, name) {
   return gh(['repo', 'delete', `${owner}/${name}`, '--yes']);

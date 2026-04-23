@@ -15,6 +15,7 @@
     "demo",
     "ai",
     "claude-code",
+    "codex",
     "github",
     "slack"
   ],
@@ -32,6 +33,7 @@
     "bin/",
     "src/",
     "manifest.json",
+    "manifest.schema.json",
     "README.md"
   ]
 }

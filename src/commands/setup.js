@@ -21,13 +21,16 @@ export async function setup(args) {
   const repoUrl = user ? `https://github.com/${user}/${repoName}` : '<your demo repo URL>';
 
   console.log(sectionHeader('Scenario Setup', scenario.name));
-  console.log(
-    card('Slack App', [
-      scenario.slack_app.name,
-      `${kleur.bold('Install:')} ${kleur.cyan(scenario.slack_app.install_url)}`,
-      `${kleur.bold('Docs:')} ${kleur.cyan(scenario.slack_app.docs_url)}`,
-    ]),
-  );
+
+  const apps = scenario.slack_apps || (scenario.slack_app ? [scenario.slack_app] : []);
+  apps.forEach((app) => {
+    console.log(
+      card(app.name || 'Slack App', [
+        `${kleur.bold('Install:')} ${kleur.cyan(app.install_url)}`,
+        `${kleur.bold('Docs:')} ${kleur.cyan(app.docs_url)}`,
+      ]),
+    );
+  });
   console.log('\n' + kleur.bold('  Runbook'));
   scenario.runbook.forEach((step, i) => {
     const rendered = step.replace(/repomatic /g, (m) => kleur.cyan(m)).trim();

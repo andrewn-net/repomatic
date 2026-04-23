@@ -2,7 +2,7 @@ import kleur from 'kleur';
 import prompts from 'prompts';
 import ora from 'ora';
 import { loadManifest, findScenario, extractManifestFlag } from '../lib/manifest.js';
-import { requireAuth, createFromTemplate, repoExists } from '../lib/gh.js';
+import { requireAuth, createFromTemplate, repoExists, createTag } from '../lib/gh.js';
 import { pickSuccess } from '../lib/brand.js';
 import { sectionHeader, commandHint, statusBadge } from '../lib/ui.js';
 
@@ -80,8 +80,12 @@ export async function provision(args) {
       isPrivate,
     });
     spinner.succeed(`Created ${kleur.cyan(`${user}/${repoName}`)}`);
+
+    const tagSpinner = ora(`Adding ${kleur.cyan(scenario.start_tag)} tag`).start();
+    await createTag(user, repoName, scenario.start_tag);
+    tagSpinner.succeed(`Added ${kleur.cyan(scenario.start_tag)} tag`);
   } catch (err) {
-    spinner.fail('Failed to create repo');
+    spinner.fail(err.message || 'Failed during provision');
     throw err;
   }
 
