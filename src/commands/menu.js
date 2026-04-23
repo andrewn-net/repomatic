@@ -26,7 +26,7 @@ const ACTION_LABELS = {
   reset: 'Reset an existing demo repo',
   status: 'Check repo status',
   setup: 'Show Slack setup steps',
-  list: 'available demo scemarios',
+  list: 'available demo scenarios',
   init: 'Check your machine setup',
 };
 
