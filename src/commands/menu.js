@@ -31,7 +31,7 @@ const ACTION_LABELS = {
 };
 
 function controlsHint() {
-  return kleur.dim('Use ↑/↓ arrows to move, Enter to choose, Ctrl+C to exit anytime.');
+  return kleur.dim('Use ↑/↓ arrows to move, Enter to choose, Ctrl+C to exit. Run with --help for command line usage.');
 }
 
 async function pickScenario(manifest, promptText) {
