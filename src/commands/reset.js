@@ -8,6 +8,7 @@ import { join } from 'node:path';
 import { loadManifest, findScenario, extractManifestFlag } from '../lib/manifest.js';
 import { requireAuth, repoExists, gh } from '../lib/gh.js';
 import { pickSuccess } from '../lib/brand.js';
+import { sectionHeader, statusBadge } from '../lib/ui.js';
 
 function run(cmd, args, opts = {}) {
   return new Promise((resolve, reject) => {
@@ -52,9 +53,7 @@ export async function reset(args) {
     );
   }
 
-  console.log(
-    `${kleur.bold('Resetting')} ${kleur.cyan(fullName)} to tag ${kleur.cyan(scenario.start_tag)}\n`,
-  );
+  console.log(sectionHeader('Reset Demo Repo', `${kleur.cyan(fullName)} -> ${kleur.cyan(scenario.start_tag)}`));
   console.log(
     kleur.yellow(
       `⚠  This will force-push over the default branch and close any open PRs on this repo.\n`,
@@ -69,7 +68,7 @@ export async function reset(args) {
       initial: false,
     });
     if (!confirm) {
-      console.log('Cancelled.');
+      console.log(`  ${statusBadge('warn', 'Cancelled')}`);
       return;
     }
   }
@@ -124,6 +123,6 @@ export async function reset(args) {
   }
 
   console.log(
-    `\n  ${kleur.green('✓')} ${kleur.bold(pickSuccess('reset'))} ${kleur.dim(`https://github.com/${fullName}`)}\n`,
+    `\n  ${statusBadge('ok', kleur.bold(pickSuccess('reset')))} ${kleur.dim(`https://github.com/${fullName}`)}\n`,
   );
 }

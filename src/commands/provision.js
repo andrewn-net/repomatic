@@ -4,6 +4,7 @@ import ora from 'ora';
 import { loadManifest, findScenario, extractManifestFlag } from '../lib/manifest.js';
 import { requireAuth, createFromTemplate, repoExists } from '../lib/gh.js';
 import { pickSuccess } from '../lib/brand.js';
+import { sectionHeader, commandHint, statusBadge } from '../lib/ui.js';
 
 export async function provision(args) {
   const { manifestArg, rest } = extractManifestFlag(args);
@@ -25,9 +26,7 @@ export async function provision(args) {
   const user = await requireAuth();
   const repoName = nameOverride || scenario.default_repo_name;
 
-  console.log(
-    `${kleur.bold('Provisioning')} ${kleur.cyan(scenario.name)} as ${kleur.cyan(`${user}/${repoName}`)}...\n`,
-  );
+  console.log(sectionHeader('Provision Demo Repo', `${scenario.name} -> ${kleur.cyan(`${user}/${repoName}`)}`));
 
   const exists = await repoExists(user, repoName);
   if (exists) {
@@ -48,12 +47,12 @@ export async function provision(args) {
     });
 
     if (action === 'cancel' || !action) {
-      console.log('Cancelled.');
+      console.log(`  ${statusBadge('warn', 'Cancelled')}`);
       return;
     }
     if (action === 'reset') {
       console.log(
-        `\nRun ${kleur.cyan(`repomatic reset ${scenarioId}`)} to reset the existing repo.`,
+        `\n  ${commandHint(`repomatic reset ${scenarioId}`)} ${kleur.dim('to reset the existing repo.')}`,
       );
       return;
     }
@@ -65,7 +64,7 @@ export async function provision(args) {
         initial: `${repoName}-2`,
       });
       if (!newName) {
-        console.log('Cancelled.');
+        console.log(`  ${statusBadge('warn', 'Cancelled')}`);
         return;
       }
       return provision([...(manifestArg ? ['--manifest', manifestArg] : []), scenarioId, '--name', newName, ...(isPrivate ? ['--private'] : [])]);
@@ -87,13 +86,13 @@ export async function provision(args) {
   }
 
   console.log(`  ${kleur.dim(`https://github.com/${user}/${repoName}`)}\n`);
-  console.log(`  ${kleur.green('✓')} ${kleur.bold(pickSuccess('provision'))}\n`);
+  console.log(`  ${statusBadge('ok', kleur.bold(pickSuccess('provision')))}\n`);
 
-  console.log(kleur.bold('  Next steps:'));
+  console.log(kleur.bold('  Next steps'));
   console.log(
-    `    1. Run ${kleur.cyan(`repomatic setup ${scenarioId}`)} to install the Slack app.`,
+    `    1. ${commandHint(`repomatic setup ${scenarioId}`)} ${kleur.dim('to install the Slack app.')}`,
   );
   console.log(
-    `    2. When you're ready to demo again, run ${kleur.cyan(`repomatic reset ${scenarioId}`)}.`,
+    `    2. ${commandHint(`repomatic reset ${scenarioId}`)} ${kleur.dim("when you're ready to demo again.")}`,
   );
 }

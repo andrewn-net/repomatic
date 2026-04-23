@@ -7,13 +7,32 @@ import kleur from 'kleur';
  */
 export function banner() {
   const lines = [
-    ' ._ _  ._   _  ._ _   _. _|_ o  _ ',
-    ' | (/_ |_) (_) | | | (_|  |_ | (_ ',
-    '       |                          ',
+    ' ██████╗ ███████╗██████╗  ██████╗ ███╗   ███╗ █████╗ ████████╗██╗ ██████╗ ',
+    ' ██╔══██╗██╔════╝██╔══██╗██╔═══██╗████╗ ████║██╔══██╗╚══██╔══╝██║██╔════╝ ',
+    ' ██████╔╝█████╗  ██████╔╝██║   ██║██╔████╔██║███████║   ██║   ██║██║      ',
+    ' ██╔══██╗██╔══╝  ██╔═══╝ ██║   ██║██║╚██╔╝██║██╔══██║   ██║   ██║██║      ',
+    ' ██║  ██║███████╗██║     ╚██████╔╝██║ ╚═╝ ██║██║  ██║   ██║   ██║╚██████╗ ',
+    ' ╚═╝  ╚═╝╚══════╝╚═╝      ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ',
   ];
-  const tagline = kleur.dim(' spin up AI demo repos, fast');
+  const palette = [kleur.cyan, kleur.blue, kleur.magenta, kleur.yellow, kleur.green, kleur.cyan];
+  const topRule = kleur.dim('  ╭──────────────────────────────────────────────────────────────────────────╮');
+  const bottomRule = kleur.dim('  ╰──────────────────────────────────────────────────────────────────────────╯');
+  const tagline = `  ${kleur.bgCyan().black(' CONTROL CENTER ')} ${kleur.bold().white('AI Demo Repo Control Center')}`;
+  const subline = `  ${kleur.dim('spin up, reset, and orchestrate polished demos')}`;
 
-  return '\n' + lines.map((l) => kleur.cyan(l)).join('\n') + '\n' + tagline + '\n';
+  return (
+    '\n' +
+    topRule +
+    '\n' +
+    lines.map((l, i) => palette[i % palette.length](l)).join('\n') +
+    '\n' +
+    bottomRule +
+    '\n' +
+    tagline +
+    '\n' +
+    subline +
+    '\n'
+  );
 }
 
 const SUCCESS_LINES = [

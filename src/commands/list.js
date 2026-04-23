@@ -1,21 +1,22 @@
 import kleur from 'kleur';
 import { loadManifest, extractManifestFlag } from '../lib/manifest.js';
+import { sectionHeader, card, commandHint } from '../lib/ui.js';
 
 export async function list(args) {
   const { manifestArg } = extractManifestFlag(args);
   const manifest = await loadManifest(manifestArg);
 
-  console.log(kleur.bold('Available demo scenarios:\n'));
+  console.log(sectionHeader('Available Demo Scenarios', `${manifest.scenarios.length} scenario(s) loaded`));
 
   for (const scenario of manifest.scenarios) {
-    console.log(`  ${kleur.cyan(scenario.id)}`);
-    console.log(`    ${kleur.bold(scenario.name)}`);
-    console.log(`    ${scenario.description}`);
-    console.log(`    Template: ${kleur.dim(scenario.template_repo)}`);
+    console.log(
+      card(`${scenario.name} ${kleur.dim(`(${scenario.id})`)}`, [
+        scenario.description,
+        `${kleur.bold('Template:')} ${kleur.dim(scenario.template_repo)}`,
+      ]),
+    );
     console.log();
   }
 
-  console.log(
-    `Run ${kleur.cyan('repomatic provision <id>')} to create a demo repo from a scenario.`,
-  );
+  console.log(`  ${commandHint('repomatic provision <id>')} ${kleur.dim('to create a demo repo from a scenario.')}`);
 }

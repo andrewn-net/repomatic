@@ -7,31 +7,43 @@ import { setup } from './commands/setup.js';
 import { status } from './commands/status.js';
 import { menu } from './commands/menu.js';
 import { banner } from './lib/brand.js';
+import { sectionHeader } from './lib/ui.js';
 
 function usage() {
-  return `${banner()}
-${kleur.bold('  Usage')}
-    repomatic                 Open the interactive menu
-    repomatic <command>       Run a command directly
+  return `${banner()}${sectionHeader('Usage')}
+  repomatic
+    Open the interactive menu
+  repomatic <command>
+    Run a command directly
 
-${kleur.bold('  Commands')}
-    ${kleur.cyan('init')}                      Check prerequisites (gh, git) and confirm auth
-    ${kleur.cyan('list')}                      Show available demo scenarios
-    ${kleur.cyan('provision')} <scenario>      Create a fresh demo repo from a scenario template
-    ${kleur.cyan('reset')} <scenario>          Reset an existing demo repo to its starting state
-    ${kleur.cyan('setup')} <scenario>          Print the Slack app install runbook for a scenario
-    ${kleur.cyan('status')}                    Show which demo repos exist and their current state
-    ${kleur.cyan('menu')}                      Explicitly open the interactive menu
+${sectionHeader('Commands')}
+  ${kleur.cyan('init')}
+    Check prerequisites (gh, git) and confirm auth
+  ${kleur.cyan('list')}
+    Show available demo scenarios
+  ${kleur.cyan('provision')} <scenario>
+    Create a fresh demo repo from a scenario template
+  ${kleur.cyan('reset')} <scenario>
+    Reset an existing demo repo to its starting state
+  ${kleur.cyan('setup')} <scenario>
+    Print the Slack app install runbook for a scenario
+  ${kleur.cyan('status')}
+    Show which demo repos exist and their current state
+  ${kleur.cyan('menu')}
+    Explicitly open the interactive menu
 
-${kleur.bold('  Options')}
-    --manifest <url|path>     Use a custom scenario manifest
-    --help, -h                Show this message
-    --version, -v             Show version
+${sectionHeader('Options')}
+  --manifest <url|path>
+    Use a custom scenario manifest
+  --help, -h
+    Show this message
+  --version, -v
+    Show version
 
-${kleur.bold('  Examples')}
-    repomatic
-    repomatic provision claude-code
-    repomatic reset claude-code --yes
+${sectionHeader('Examples')}
+  repomatic
+  repomatic provision claude-code
+  repomatic reset claude-code --yes
 `;
 }
 

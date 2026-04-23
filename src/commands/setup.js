@@ -1,6 +1,7 @@
 import kleur from 'kleur';
 import { loadManifest, findScenario, extractManifestFlag } from '../lib/manifest.js';
 import { requireAuth } from '../lib/gh.js';
+import { sectionHeader, card } from '../lib/ui.js';
 
 export async function setup(args) {
   const { manifestArg, rest } = extractManifestFlag(args);
@@ -19,15 +20,15 @@ export async function setup(args) {
   const repoName = scenario.default_repo_name;
   const repoUrl = user ? `https://github.com/${user}/${repoName}` : '<your demo repo URL>';
 
-  console.log(kleur.bold(`\nSetup: ${scenario.name}\n`));
-
-  console.log(kleur.bold('Slack app:'));
-  console.log(`  ${scenario.slack_app.name}`);
-  console.log(`  Install: ${kleur.cyan(scenario.slack_app.install_url)}`);
-  console.log(`  Docs:    ${kleur.cyan(scenario.slack_app.docs_url)}`);
-  console.log();
-
-  console.log(kleur.bold('Runbook:'));
+  console.log(sectionHeader('Scenario Setup', scenario.name));
+  console.log(
+    card('Slack App', [
+      scenario.slack_app.name,
+      `${kleur.bold('Install:')} ${kleur.cyan(scenario.slack_app.install_url)}`,
+      `${kleur.bold('Docs:')} ${kleur.cyan(scenario.slack_app.docs_url)}`,
+    ]),
+  );
+  console.log('\n' + kleur.bold('  Runbook'));
   scenario.runbook.forEach((step, i) => {
     const rendered = step.replace(/repomatic /g, (m) => kleur.cyan(m)).trim();
     console.log(`  ${kleur.bold(`${i + 1}.`)} ${rendered}`);
@@ -35,7 +36,7 @@ export async function setup(args) {
   console.log();
 
   if (scenario.prompts) {
-    console.log(kleur.bold('Suggested demo prompts:'));
+    console.log(kleur.bold('  Suggested demo prompts'));
     console.log();
 
     if (scenario.prompts.bug_fix?.length) {
@@ -55,8 +56,7 @@ export async function setup(args) {
     }
   }
 
-  console.log(kleur.bold('Your demo repo:'));
-  console.log(`  ${kleur.cyan(repoUrl)}`);
+  console.log(card('Your Demo Repo', [kleur.cyan(repoUrl)]));
   console.log();
 }
 
