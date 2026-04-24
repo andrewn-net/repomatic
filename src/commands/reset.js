@@ -186,6 +186,11 @@ export async function reset(args) {
       await run('git', ['fetch', 'origin', '--quiet'], { cwd: localDir });
       await run('git', ['reset', '--hard', `origin/${defaultBranch}`], { cwd: localDir });
       await run('git', ['clean', '-fd'], { cwd: localDir });
+      // Remove build caches that are gitignored but would serve stale output
+      const cacheDirs = ['.next', '.turbo', 'dist', '.nuxt', '.output'];
+      for (const dir of cacheDirs) {
+        await rm(join(localDir, dir), { recursive: true, force: true }).catch(() => {});
+      }
       syncSpinner.succeed(`Local clone synced ${kleur.dim(localDir)}`);
     } catch (err) {
       syncSpinner.warn(`Could not sync local clone: ${err.message.split('\n')[0]}`);
