@@ -195,5 +195,17 @@ export async function reset(args) {
     } catch (err) {
       syncSpinner.warn(`Could not sync local clone: ${err.message.split('\n')[0]}`);
     }
+
+    // Re-install dependencies to match the reverted package.json
+    const hasPackageJson = await stat(join(localDir, 'package.json')).catch(() => null);
+    if (hasPackageJson) {
+      const installSpinner = ora('Re-installing dependencies').start();
+      try {
+        await run('npm', ['install'], { cwd: localDir });
+        installSpinner.succeed('Dependencies re-installed');
+      } catch (err) {
+        installSpinner.warn(`npm install failed: ${err.message.split('\n')[0]}`);
+      }
+    }
   }
 }
