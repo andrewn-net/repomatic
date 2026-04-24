@@ -26,25 +26,69 @@ export async function status(args) {
       continue;
     }
 
-    // Check for open PRs as a signal that the repo is "mid-demo"
+    const issues = [];
+
+    // 1. Compare default branch HEAD against start_tag
+    let commitDrift = false;
+    try {
+      const defaultBranch = await gh([
+        'api', `repos/${user}/${repoName}`, '--jq', '.default_branch',
+      ]);
+      const headSha = await gh([
+        'api', `repos/${user}/${repoName}/commits/${defaultBranch}`, '--jq', '.sha',
+      ]);
+      const tagSha = await gh([
+        'api', `repos/${user}/${repoName}/git/ref/tags/${scenario.start_tag}`,
+        '--jq', '.object.sha',
+      ]);
+      if (headSha !== tagSha) {
+        commitDrift = true;
+        issues.push('Default branch has drifted from start tag');
+      }
+    } catch {
+      issues.push('Could not verify start tag');
+    }
+
+    // 2. Check for open PRs
     let openPrs = 0;
     try {
       const prsJson = await gh([
         'pr', 'list', '--repo', fullName, '--state', 'open', '--json', 'number',
       ]);
       openPrs = JSON.parse(prsJson || '[]').length;
+      if (openPrs > 0) {
+        issues.push(`${openPrs} open PR${openPrs === 1 ? '' : 's'}`);
+      }
     } catch {}
 
-    const state = openPrs > 0 ? kleur.yellow('mid-demo') : kleur.green('clean');
+    // 3. Check for extra branches (beyond default)
+    let extraBranches = 0;
+    try {
+      const branchesJson = await gh([
+        'api', `repos/${user}/${repoName}/branches`, '--jq', '.[].name',
+      ]);
+      const branches = branchesJson.split('\n').filter((b) => b.trim());
+      // Subtract 1 for the default branch
+      extraBranches = Math.max(0, branches.length - 1);
+      if (extraBranches > 0) {
+        issues.push(`${extraBranches} extra branch${extraBranches === 1 ? '' : 'es'}`);
+      }
+    } catch {}
+
+    const isClean = issues.length === 0;
+    const state = isClean ? kleur.green('clean') : kleur.yellow('modified');
     const lines = [
       `${kleur.bold('State:')} ${state}`,
       kleur.dim(`https://github.com/${fullName}`),
     ];
-    if (openPrs > 0) {
-      lines.push(`${openPrs} open PR(s)`);
-      lines.push(`${commandHint(`repomatic reset ${scenario.id}`)} ${kleur.dim('to clean it up.')}`);
+    if (!isClean) {
+      for (const issue of issues) {
+        lines.push(kleur.yellow(`• ${issue}`));
+      }
+      lines.push(`${commandHint(`repomatic reset ${scenario.id}`)} ${kleur.dim('to restore it.')}`);
     }
     console.log(card(`${scenario.name} ${kleur.dim(`(${scenario.id})`)}`, lines));
     console.log();
   }
 }
+
