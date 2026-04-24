@@ -207,5 +207,9 @@ export async function reset(args) {
         installSpinner.warn(`npm install failed: ${err.message.split('\n')[0]}`);
       }
     }
+
+    console.log(
+      `\n  ${kleur.green('✔')} Ready — restart your dev server: ${kleur.cyan(`cd ${repoName} && npm run dev`)}\n`,
+    );
   }
 }
