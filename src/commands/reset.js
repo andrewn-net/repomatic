@@ -2,9 +2,9 @@ import kleur from 'kleur';
 import prompts from 'prompts';
 import ora from 'ora';
 import { spawn } from 'node:child_process';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, rm, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { loadManifest, findScenario, extractManifestFlag } from '../lib/manifest.js';
 import { requireAuth, repoExists, gh } from '../lib/gh.js';
 import { pickSuccess } from '../lib/brand.js';
@@ -23,6 +23,31 @@ function run(cmd, args, opts = {}) {
       else reject(new Error(stderr.trim() || `${cmd} ${args.join(' ')} exited ${code}`));
     });
   });
+}
+
+/**
+ * Try to find a local clone of the given repo.
+ * Checks the current working directory and ./<repoName>.
+ * Returns the absolute path if found, or null.
+ */
+async function findLocalClone(fullName, repoName) {
+  const candidates = [
+    process.cwd(),
+    resolve(process.cwd(), repoName),
+  ];
+
+  for (const dir of candidates) {
+    try {
+      await stat(join(dir, '.git'));
+      const remoteUrl = await run('git', ['remote', 'get-url', 'origin'], { cwd: dir });
+      if (remoteUrl.includes(fullName)) {
+        return dir;
+      }
+    } catch {
+      // Not a matching clone, skip
+    }
+  }
+  return null;
 }
 
 export async function reset(args) {
@@ -96,6 +121,7 @@ export async function reset(args) {
   }
 
   // 2. Clone, rewind, force-push
+  let defaultBranch = 'main';
   const workDir = await mkdtemp(join(tmpdir(), 'repomatic-'));
   try {
     const cloneSpinner = ora('Cloning repo').start();
@@ -106,7 +132,7 @@ export async function reset(args) {
     await run('git', ['fetch', '--tags', '--quiet'], { cwd: workDir });
 
     // Detect default branch
-    const defaultBranch = await run(
+    defaultBranch = await run(
       'gh',
       ['repo', 'view', fullName, '--json', 'defaultBranchRef', '--jq', '.defaultBranchRef.name'],
     );
@@ -151,4 +177,18 @@ export async function reset(args) {
   console.log(
     `\n  ${statusBadge('ok', kleur.bold(pickSuccess('reset')))} ${kleur.dim(`https://github.com/${fullName}`)}\n`,
   );
+
+  // 4. Auto-sync local clone if found
+  const localDir = await findLocalClone(fullName, repoName);
+  if (localDir) {
+    const syncSpinner = ora(`Syncing local clone ${kleur.dim(localDir)}`).start();
+    try {
+      await run('git', ['fetch', 'origin', '--quiet'], { cwd: localDir });
+      await run('git', ['reset', '--hard', `origin/${defaultBranch}`], { cwd: localDir });
+      await run('git', ['clean', '-fd'], { cwd: localDir });
+      syncSpinner.succeed(`Local clone synced ${kleur.dim(localDir)}`);
+    } catch (err) {
+      syncSpinner.warn(`Could not sync local clone: ${err.message.split('\n')[0]}`);
+    }
+  }
 }
