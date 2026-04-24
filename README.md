@@ -53,7 +53,7 @@ You should see three green checkmarks: `gh` installed, `git` installed, GitHub a
 repomatic provision ai-demo-1
 ```
 
-This creates a new repo called `ai-demo-1` in your GitHub account, copied from the template repository. The output includes the repo URL.
+This creates a new **private** repo called `ai-demo-1` in your GitHub account, copied from the template repository. The output includes the repo URL. Pass `--public` if you explicitly want a public repo.
 
 ### 5. Install the Slack app
 
@@ -96,7 +96,7 @@ Or run commands directly:
 | `setup <scenario>` | Print the runbook for installing the scenario's Slack app |
 | `status` | Show which demos are provisioned and whether any are mid-demo |
 
-Most commands accept `--manifest <url|path>` to use a custom scenario catalog, and `--name <n>` to override the default repo name.
+Most commands accept `--manifest <url|path>` to use a custom scenario catalog, and `--name <n>` to override the default repo name. `provision` creates repos as private by default; add `--public` if needed.
 
 ## How reset works
 

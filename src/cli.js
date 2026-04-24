@@ -35,6 +35,10 @@ ${sectionHeader('Commands')}
 ${sectionHeader('Options')}
   --manifest <url|path>
     Use a custom scenario manifest
+  --public
+    With provision: create the repo as public (default is private)
+  --private
+    With provision: explicitly create the repo as private
   --help, -h
     Show this message
   --version, -v

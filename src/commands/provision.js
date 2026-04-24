@@ -16,7 +16,13 @@ export async function provision(args) {
     );
   }
 
-  const isPrivate = flags.includes('--private');
+  const wantsPrivate = flags.includes('--private');
+  const wantsPublic = flags.includes('--public');
+  if (wantsPrivate && wantsPublic) {
+    throw new Error('Choose one visibility flag: use either --private or --public, not both.');
+  }
+  // Default to private so demo repos are not exposed accidentally.
+  const isPrivate = wantsPublic ? false : true;
   const nameOverrideIdx = flags.indexOf('--name');
   const nameOverride = nameOverrideIdx >= 0 ? flags[nameOverrideIdx + 1] : undefined;
 
@@ -26,7 +32,12 @@ export async function provision(args) {
   const user = await requireAuth();
   const repoName = nameOverride || scenario.default_repo_name;
 
-  console.log(sectionHeader('Provision Demo Repo', `${scenario.name} -> ${kleur.cyan(`${user}/${repoName}`)}`));
+  console.log(
+    sectionHeader(
+      'Provision Demo Repo',
+      `${scenario.name} -> ${kleur.cyan(`${user}/${repoName}`)} ${kleur.dim(isPrivate ? '(private)' : '(public)')}`,
+    ),
+  );
 
   const exists = await repoExists(user, repoName);
   if (exists) {
@@ -67,7 +78,13 @@ export async function provision(args) {
         console.log(`  ${statusBadge('warn', 'Cancelled')}`);
         return;
       }
-      return provision([...(manifestArg ? ['--manifest', manifestArg] : []), scenarioId, '--name', newName, ...(isPrivate ? ['--private'] : [])]);
+      return provision([
+        ...(manifestArg ? ['--manifest', manifestArg] : []),
+        scenarioId,
+        '--name',
+        newName,
+        ...(isPrivate ? ['--private'] : ['--public']),
+      ]);
     }
   }
 
