@@ -50,15 +50,15 @@ You should see three green checkmarks: `gh` installed, `git` installed, GitHub a
 ### 4. Create your first demo repo
 
 ```bash
-repomatic provision ai-demo
+repomatic provision ai-demo-1
 ```
 
-This creates a new repo called `ai-demo` in your GitHub account, copied from the template repository. The output includes the repo URL.
+This creates a new repo called `ai-demo-1` in your GitHub account, copied from the template repository. The output includes the repo URL.
 
 ### 5. Install the Slack app
 
 ```bash
-repomatic setup ai-demo
+repomatic setup ai-demo-1
 ```
 
 This prints the install URL for the AI's Slack app (e.g. Claude Code or Codex), plus a runbook for connecting it to your new demo repo. Follow those steps in your browser.
@@ -70,7 +70,7 @@ In Slack, mention your AI tool (e.g. `@Claude Code`) and ask it to work through 
 ### 7. Reset for the next demo
 
 ```bash
-repomatic reset ai-demo
+repomatic reset ai-demo-1
 ```
 
 The repo rewinds to its starting state, and any open PRs close. You're ready to demo again.
@@ -117,7 +117,7 @@ That keeps the same repo URL (so your Slack app's repo connection stays valid) a
 
 ### AI Coding — Feature Build Demo
 
-A minimal Next.js outdoor-gear storefront (Summit Supply). Designed for demoing AI coding tools like Claude Code, Codex, or Lovable in Slack. Ask the AI to fix a bug or add a feature; it opens a PR implementing the changes. Merge it, run `repomatic reset ai-demo`, and you're back to square one.
+A minimal Next.js outdoor-gear storefront (Summit Supply). Designed for demoing AI coding tools like Claude Code, Codex, or Lovable in Slack. Ask the AI to fix a bug or add a feature; it opens a PR implementing the changes. Merge it, run `repomatic reset ai-demo-1`, and you're back to square one.
 
 Template: [`andrewn-net/repomatic-template-demo-1`](https://github.com/andrewn-net/repomatic-template-demo-1)
 

@@ -56,7 +56,7 @@ export async function reset(args) {
   console.log(sectionHeader('Reset Demo Repo', `${kleur.cyan(fullName)} -> ${kleur.cyan(scenario.start_tag)}`));
   console.log(
     kleur.yellow(
-      `⚠  This will force-push over the default branch and close any open PRs on this repo.\n`,
+      `⚠  This will force-push over the default branch, close open PRs, and delete all non-default branches.\n`,
     ),
   );
 
@@ -118,6 +118,32 @@ export async function reset(args) {
     const pushSpinner = ora('Force-pushing').start();
     await run('git', ['push', '--force', 'origin', defaultBranch, '--quiet'], { cwd: workDir });
     pushSpinner.succeed('Force-pushed');
+
+    // 3. Delete all non-default remote branches
+    const branchSpinner = ora('Cleaning up branches').start();
+    try {
+      const remoteBranchOutput = await run(
+        'git',
+        ['branch', '-r', '--format', '%(refname:short)'],
+        { cwd: workDir },
+      );
+      const remoteBranches = remoteBranchOutput
+        .split('\n')
+        .map((b) => b.trim())
+        .filter((b) => b && b.startsWith('origin/') && b !== `origin/${defaultBranch}` && b !== 'origin/HEAD');
+
+      const branchNames = remoteBranches.map((b) => b.replace('origin/', ''));
+      if (branchNames.length > 0) {
+        // Delete all non-default branches in one push
+        const deleteRefs = branchNames.map((b) => `:refs/heads/${b}`);
+        await run('git', ['push', 'origin', ...deleteRefs, '--quiet'], { cwd: workDir });
+      }
+      branchSpinner.succeed(
+        `Deleted ${branchNames.length} branch${branchNames.length === 1 ? '' : 'es'}`,
+      );
+    } catch (err) {
+      branchSpinner.warn(err.message.split('\n')[0]);
+    }
   } finally {
     await rm(workDir, { recursive: true, force: true });
   }

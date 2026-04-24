@@ -42,8 +42,8 @@ ${sectionHeader('Options')}
 
 ${sectionHeader('Examples')}
   repomatic
-  repomatic provision ai-demo
-  repomatic reset ai-demo --yes
+  repomatic provision ai-demo-1
+  repomatic reset ai-demo-1 --yes
 `;
 }
 

@@ -3,12 +3,12 @@
   "version": 1,
   "scenarios": [
     {
-      "id": "ai-demo",
+      "id": "ai-demo-1",
       "name": "AI Coding — Summit Supply E-commerce Demo",
-      "tool": "ai-demo",
+      "tool": "ai-demo-1",
       "description": "A small Next.js outdoor-gear storefront (Summit Supply). Designed for demoing AI coding tools like Claude Code, Codex, or Lovable in Slack.",
       "template_repo": "andrewn-net/repomatic-template-demo-1",
-      "default_repo_name": "ai-demo",
+      "default_repo_name": "ai-demo-1",
       "start_tag": "demo-start",
       "slack_apps": [
         {
@@ -31,12 +31,12 @@
         ]
       },
       "runbook": [
-        "Provision your demo repo: repomatic provision ai-demo",
+        "Provision your demo repo: repomatic provision ai-demo-1",
         "Install your AI's Slack app (e.g. Claude Code or Codex) and connect it to your demo repo.",
         "Run the storefront locally so your audience can see it: cd into the repo, npm install && npm run dev",
         "Pick a scenario (bug fix or feature) and paste the relevant prompt from the list above into Slack, mentioning your AI tool.",
         "Review the PR the AI opens. Merge it. Refresh the storefront to see the change live.",
-        "When you're ready to demo again: repomatic reset ai-demo"
+        "When you're ready to demo again: repomatic reset ai-demo-1"
       ]
     }
   ]
